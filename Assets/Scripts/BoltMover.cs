@@ -7,5 +7,7 @@ public class BoltMover : MonoBehaviour {
     void Start ()
     {
         rigidbody.velocity = transform.forward * speed;
+        // rigidbody.velocity = transform.TransformDirection(new Vector3(0,0,speed)); 
+        
     }
 }
