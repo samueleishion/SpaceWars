@@ -8,6 +8,7 @@ public class ShipControl : MonoBehaviour {
 	public Rigidbody shot; 
 	public Transform shot_spawn; 
 	public float fire_rate; 
+	public int boost; 
 
 
 	private float lower_speed_limit; 
@@ -20,6 +21,8 @@ public class ShipControl : MonoBehaviour {
 	private float original_turn; 
 	private float fast_turn; 
 	private Renderer this_renderer; 
+	private int current_boost; 
+	private bool boost_lock; 
 
 	// Uses physics 
 	public void Start() {
@@ -27,6 +30,16 @@ public class ShipControl : MonoBehaviour {
 		upper_speed_limit = speed_limit; 
 		original_turn = turn*1.0f; 
 		fast_turn = turn*1.5f; 
+		current_boost = boost; 
+		boost_lock = false; 
+
+		Renderer[] renderers = transform.GetChild(0).GetComponentsInChildren<Renderer>(); 
+		foreach(Renderer r in renderers) {
+			if(r.name=="part_jet_flare") {
+				this_renderer = r; 
+				break; 
+			}
+		}
 	}
 
 	public void FixedUpdate () {
@@ -40,39 +53,7 @@ public class ShipControl : MonoBehaviour {
 
 	public void Move() { 
 
-		if(Input.GetButton("Fire2")) {
-			Renderer[] renderers = transform.GetChild(0).GetComponentsInChildren<Renderer>(); 
-			foreach(Renderer r in renderers) {
-				if(r.name=="part_jet_flare") {
-					r.enabled = true; 
-					r.gameObject.audio.volume = 1f; 
-					break; 
-				}
-			}
-
-			if(speed<upper_speed_limit) speed += speed_delta; 
-			else speedup = false; 
-
-			turn = fast_turn; 
-		} else {
-			Renderer[] renderers = transform.GetChild(0).GetComponentsInChildren<Renderer>(); 
-			foreach(Renderer r in renderers) {
-				if(r.name=="part_jet_flare") { 
-					this_renderer = r; 
-					r.enabled = false; 
-					break; 
-				}
-			}
-
-			if(speed>lower_speed_limit) speed -= speed_delta/2; 
-			else slowdown = false; 
-
-			if(this_renderer.gameObject.audio.volume>0)
-				this_renderer.gameObject.audio.volume -= 0.1f; 
-
-			turn = original_turn; 
-		}
-
+		Boost(); 
 
 		if(Input.GetAxis("Horizontal")<0) 
 			transform.Rotate(0,0,2*turn*Time.deltaTime); 
@@ -90,6 +71,43 @@ public class ShipControl : MonoBehaviour {
 			transform.Rotate(turn*Time.deltaTime,0,0); 
 
 		transform.Translate(0,0,speed*Time.deltaTime);
+	}
+
+	public void Boost() {
+		if(Input.GetButton("Fire2")) {
+			if(current_boost>0) {
+				current_boost -= 2; 
+
+				this_renderer.enabled = true; 
+				this_renderer.gameObject.audio.volume = 1f; 
+
+				if(speed<upper_speed_limit) speed += speed_delta; 
+				else speedup = false; 
+
+				turn = fast_turn; 
+			} else {
+				this_renderer.enabled = false; 
+				if(this_renderer.gameObject.audio.volume>0)
+					this_renderer.gameObject.audio.volume -= 0.1f; 
+
+				turn = original_turn; 	
+			}
+			
+		} else {
+			
+			this_renderer.enabled = false; 
+			if(this_renderer.gameObject.audio.volume>0)
+				this_renderer.gameObject.audio.volume -= 0.1f; 
+
+			if(speed>lower_speed_limit) speed -= speed_delta/2; 
+			else slowdown = false; 
+
+			turn = original_turn; 
+
+			if(current_boost<boost) current_boost += 1; 
+		} 
+
+		// print(current_boost); 
 	}
 
 	public void Shoot() {

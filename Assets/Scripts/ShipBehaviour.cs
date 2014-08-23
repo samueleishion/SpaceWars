@@ -8,7 +8,7 @@ public class ShipBehaviour : MonoBehaviour {
 
 	public void OnTriggerEnter(Collider other) {
 
-		print("hit by "+other.gameObject.name+" tag-"+other.gameObject.tag); 
+		// print("hit by "+other.gameObject.name+" tag-"+other.gameObject.tag); 
 
 		if(other.gameObject.tag=="Bolt") life--; 
 		else life -= 50; 
