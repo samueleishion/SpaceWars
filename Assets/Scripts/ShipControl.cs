@@ -4,7 +4,7 @@ using System.Collections;
 public class ShipControl : MonoBehaviour {
 	public float speed; 
 	public float speed_limit; 
-	public int turn; 
+	public float turn; 
 	public Rigidbody shot; 
 	public Transform shot_spawn; 
 	public float fire_rate; 
@@ -17,11 +17,15 @@ public class ShipControl : MonoBehaviour {
 	private float speed_delta = 0.5f; 
 	private Renderer[] ts; 
 	private float next_fire; 
+	private float original_turn; 
+	private float fast_turn; 
 
 	// Uses physics 
 	public void Start() {
 		lower_speed_limit = speed; 
 		upper_speed_limit = speed_limit; 
+		original_turn = turn*1.0f; 
+		fast_turn = turn*1.5f; 
 	}
 
 	public void FixedUpdate () {
@@ -46,6 +50,8 @@ public class ShipControl : MonoBehaviour {
 
 			if(speed<upper_speed_limit) speed += speed_delta; 
 			else speedup = false; 
+
+			turn = fast_turn; 
 		} else {
 			Renderer[] renderers = transform.GetChild(0).GetComponentsInChildren<Renderer>(); 
 			foreach(Renderer r in renderers) {
@@ -57,6 +63,8 @@ public class ShipControl : MonoBehaviour {
 
 			if(speed>lower_speed_limit) speed -= speed_delta/2; 
 			else slowdown = false; 
+
+			turn = original_turn; 
 		}
 
 
