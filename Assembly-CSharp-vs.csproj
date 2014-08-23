@@ -58,6 +58,7 @@
      <Compile Include="Assets\Done\Done_Scripts\Done_WeaponController.cs" />
      <Compile Include="Assets\Scripts\BoltMover.cs" />
      <Compile Include="Assets\Scripts\CameraFollow.cs" />
+     <Compile Include="Assets\Scripts\LocationNotification.cs" />
      <Compile Include="Assets\Scripts\ShipBehaviour.cs" />
      <Compile Include="Assets\Scripts\ShipControl.cs" />
      <None Include="Assets\Space Shooter\Info.txt" />
