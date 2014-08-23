@@ -19,6 +19,7 @@ public class ShipControl : MonoBehaviour {
 	private float next_fire; 
 	private float original_turn; 
 	private float fast_turn; 
+	private Renderer this_renderer; 
 
 	// Uses physics 
 	public void Start() {
@@ -44,6 +45,7 @@ public class ShipControl : MonoBehaviour {
 			foreach(Renderer r in renderers) {
 				if(r.name=="part_jet_flare") {
 					r.enabled = true; 
+					r.gameObject.audio.volume = 1f; 
 					break; 
 				}
 			}
@@ -55,7 +57,8 @@ public class ShipControl : MonoBehaviour {
 		} else {
 			Renderer[] renderers = transform.GetChild(0).GetComponentsInChildren<Renderer>(); 
 			foreach(Renderer r in renderers) {
-				if(r.name=="part_jet_flare") {
+				if(r.name=="part_jet_flare") { 
+					this_renderer = r; 
 					r.enabled = false; 
 					break; 
 				}
@@ -63,6 +66,9 @@ public class ShipControl : MonoBehaviour {
 
 			if(speed>lower_speed_limit) speed -= speed_delta/2; 
 			else slowdown = false; 
+
+			if(this_renderer.gameObject.audio.volume>0)
+				this_renderer.gameObject.audio.volume -= 0.1f; 
 
 			turn = original_turn; 
 		}

@@ -8,13 +8,20 @@ public class ShipBehaviour : MonoBehaviour {
 
 	public void OnTriggerEnter(Collider other) {
 
-		life--; 
+		if(other.gameObject.tag=="Bolt") {
+			life--; 
+			if(life<=0) 
+				Explode(other); 
+		} else {
+			Explode(other); 
+			Explode(collider); 
+		}
+	}
 
-		if(life<=0) {
-			GameObject e = Instantiate(explosion, transform.position, transform.rotation) as GameObject; 
-			Destroy(other.gameObject); 
-			Destroy(gameObject); 
-			Destroy(e,2); 
-		} 
+	private void Explode(Collider other) {
+		GameObject e = Instantiate(explosion, transform.position, transform.rotation) as GameObject; 
+		Destroy(other.gameObject); 
+		Destroy(gameObject); 
+		Destroy(e,2); 
 	}
 }
