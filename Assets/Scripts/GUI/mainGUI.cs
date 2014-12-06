@@ -12,9 +12,11 @@ public class mainGUI : MonoBehaviour {
 			menuOn = !menuOn; 
 
 		if(menuOn) {
+			Time.timeScale = 0f; 
 			quitButton.SetActive(true); 
 			restartButton.SetActive(true); 
 		} else {
+			Time.timeScale = 1f; 
 			quitButton.SetActive(false); 
 			restartButton.SetActive(false); 
 		}
